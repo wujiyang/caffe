@@ -1,0 +1,44 @@
+net: "face_example/sphereface/sphereface_model_36.prototxt"
+
+
+#Mix CASIA-Webface and MS_Celeb   25708 classes
+# train = 1374816    batch_size:256/128    1374816/256/128 ~= 5370/10740 iters/epoch
+# val = 115076       batch_szie:16     115076/16 ~=  7192 iters/epoch
+
+#test 20000calsses
+# train = 1058078    batch_size:256/128    1058078/256/128 ~= 4133/8266 iters/epoch
+# val = 86536       batch_szie:16     86536/16 ~=  5408 iters/epoch
+
+
+#vggface2
+# train = 2885129    batch_size:128    2885129/128 ~= 22540 iters/epoch
+# val = 43155       batch_szie:16     43155/16 ~=  2697 iters/epoch
+
+
+test_iter: 5408 
+test_interval: 4000
+test_initialization: false
+
+average_loss: 20
+
+base_lr: 0.000001
+lr_policy: "multistep"
+gamma: 0.1
+
+#0.1 0.01 0.001 0.0001 0.00001
+#2,  3,   4,    2,      
+
+stepvalue: 16000          #0.01       2  epoches
+stepvalue: 22000          #0.001      3  epoches
+#stepvalue: 70000         #0.0001     4  epoches
+#stepvalue: 85000         #0.00001    2  epoches
+max_iter: 28000           #0.000001   1  epoches
+
+iter_size: 2
+display: 100
+momentum: 0.9
+weight_decay: 0.0005
+snapshot: 2000
+snapshot_prefix: "face_example/sphereface/snapshot/triplet/sphereface_36"
+
+solver_mode: GPU
