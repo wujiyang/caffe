@@ -11,10 +11,15 @@ namespace caffe {
 // therefore its value is always lower than 0x800... where casting
 // negative value of a parameter converts it to value higher than 0x800...
 // The casting allows to use one condition instead of two.
+/*如果a大于等于0且小于b，则返回true，否则返回false*/
 inline bool is_a_ge_zero_and_a_lt_b(int a, int b) {
   return static_cast<unsigned>(a) < static_cast<unsigned>(b);
 }
 
+/*im2col_cpu函数，主要用来将image转换为矩阵，
+矩阵行数：卷积核height*卷积核width，实际还要乘以channel c
+矩阵列数：输出图像height*输出图像width
+*/
 template <typename Dtype>
 void im2col_cpu(const Dtype* data_im, const int channels,
     const int height, const int width, const int kernel_h, const int kernel_w,
@@ -22,16 +27,22 @@ void im2col_cpu(const Dtype* data_im, const int channels,
     const int stride_h, const int stride_w,
     const int dilation_h, const int dilation_w,
     Dtype* data_col) {
+  //计算卷积层的输出height
   const int output_h = (height + 2 * pad_h -
     (dilation_h * (kernel_h - 1) + 1)) / stride_h + 1;
+  //计算卷积层的输出width
   const int output_w = (width + 2 * pad_w -
     (dilation_w * (kernel_w - 1) + 1)) / stride_w + 1;
+  //卷积层单通道的数据容量
   const int channel_size = height * width;
-  for (int channel = channels; channel--; data_im += channel_size) {
+  for (int channel = channels; channel--; data_im += channel_size) { //每次处理一个通道的数据
+    //第二第三个for循环表示输出矩阵的某一列，同时体现了输出矩阵的行数
     for (int kernel_row = 0; kernel_row < kernel_h; kernel_row++) {
       for (int kernel_col = 0; kernel_col < kernel_w; kernel_col++) {
         int input_row = -pad_h + kernel_row * dilation_h;
+        //第四第五for循环表示了输出矩阵的某一行，同时体现了输出矩阵的列数
         for (int output_rows = output_h; output_rows; output_rows--) {
+          //如果行数索引小于0或者大于图像的高，则该行为pad，全部列填充0
           if (!is_a_ge_zero_and_a_lt_b(input_row, height)) {
             for (int output_cols = output_w; output_cols; output_cols--) {
               *(data_col++) = 0;
@@ -39,6 +50,7 @@ void im2col_cpu(const Dtype* data_im, const int channels,
           } else {
             int input_col = -pad_w + kernel_col * dilation_w;
             for (int output_col = output_w; output_col; output_col--) {
+              //如果列值小于0或者大于width，则为pad列，填充0
               if (is_a_ge_zero_and_a_lt_b(input_col, width)) {
                 *(data_col++) = data_im[input_row * width + input_col];
               } else {

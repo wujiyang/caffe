@@ -429,6 +429,27 @@ message LayerParameter {
   //A-Softmax 层
   optional MarginInnerProductParameter margin_inner_product_param = 150;
   
+  //AMSoftmax层
+  optional LabelSpecificAddParameter label_specific_add_param = 151;
+  optional NormalizeParameter normalize_param = 152;
+  
+}
+
+message NormalizeParameter {
+  optional string normalize_type = 1 [default = "L2"];
+  optional bool fix_gradient = 2 [default = false];
+  optional bool bp_norm = 3 [default = false];
+}
+
+message LabelSpecificAddParameter {
+  optional float bias = 1 [default = 0.0];
+  optional bool transform_test = 2 [default = false];
+  optional float bias_base = 3 [default = 0.0];
+  optional float bias_gamma = 4 [default = 0.0];
+  optional float bias_power = 5 [default = 1.0];
+  optional float bias_min = 6 [default =0.0];
+  optional float bias_max = 7 [default =0.0];
+  optional uint32 iteration = 8 [default = 0];
 }
 
 message MarginInnerProductParameter {
