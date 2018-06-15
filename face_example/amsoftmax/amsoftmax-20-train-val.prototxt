@@ -13,8 +13,8 @@ layer {
     mirror: true
   }
   image_data_param {
-    source: "C:/datasets/CASIA-maxpy-clean-aligned-96/list.txt"
-    root_folder: "C:/datasets/CASIA-maxpy-clean-aligned-96/"
+    source: "/home/wujiyang/data/vggface2/train.txt"
+    root_folder: "/home/wujiyang/data/vggface2/"
     batch_size: 256 
     shuffle: true
   }
@@ -33,8 +33,8 @@ layer {
     mirror: true
   }
   image_data_param {
-    source: "C:/datasets/CASIA-maxpy-clean-aligned-96/val.txt"
-    root_folder: "C:/datasets/CASIA-maxpy-clean-aligned-96/"
+    source: "/home/wujiyang/data/vggface2/val.txt"
+    root_folder: "/home/wujiyang/data/vggface2/"
     batch_size: 32
     shuffle: true
   }
@@ -834,7 +834,7 @@ layer {
     lr_mult: 1
   }
   inner_product_param{
-    num_output: 10516
+    num_output: 100
     normalize: true
     weight_filler {
       type: "xavier"

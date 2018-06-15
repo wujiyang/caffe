@@ -1,0 +1,26 @@
+net: "face_example/amsoftmax/amsoftmax-20-train-val.prototxt"
+
+# train data:33625   batch-size: 256    ---->     33625/256  = 132 iters/epoch
+# val data: 500      batch-size: 32     ---->     500/32     = 16 iters/epoch
+test_iter: 16
+test_interval: 200
+test_initialization: false
+
+base_lr: 0.1
+lr_policy: "multistep"
+gamma: 0.1
+
+stepvalue: 1200   # 10 epoch 0.1
+stepvalue: 2400   # 10 epoch 0.01
+stepvalue: 3600   # 10 epoch 0.001
+stepvalue: 4800   # 10 epoch 0.0001
+max_iter: 5500    # 05 epoch 0.00001
+
+iter_size: 1
+display: 100
+momentum: 0.9
+weight_decay: 0.0005
+snapshot: 1000
+snapshot_prefix: "face_example/amsoftmax/snapshot/amsoftmax_20"
+
+solver_mode: GPU
