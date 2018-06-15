@@ -4,8 +4,6 @@
 #include "caffe/layers/inner_product_layer.hpp"
 #include "caffe/util/math_functions.hpp"
 
-// 这里面主要就是增加了weight normalization，其他关于bottom size > 2的代码可以全部删除
-// code from happynear
 namespace caffe {
 
 template <typename Dtype>
@@ -15,14 +13,14 @@ void InnerProductLayer<Dtype>::LayerSetUp(const vector<Blob<Dtype>*>& bottom,
   bias_term_ = this->layer_param_.inner_product_param().bias_term();
   transpose_ = this->layer_param_.inner_product_param().transpose();
   normalize_ = this->layer_param_.inner_product_param().normalize();
-  if (bottom.size() == 1) N_ = num_output; //输出神经元个数
+  if (bottom.size() == 1) N_ = num_output;
   else N_ = bottom[1]->num();
   const int axis = bottom[0]->CanonicalAxisIndex(
       this->layer_param_.inner_product_param().axis());
   // Dimensions starting from "axis" are "flattened" into a single
   // length K_ vector. For example, if bottom[0]'s shape is (N, C, H, W),
   // and axis == 1, N inner products with dimension CHW are performed.
-  K_ = bottom[0]->count(axis); // 将图像数据flatten成一个vector of size: chw
+  K_ = bottom[0]->count(axis);
   // Check if we need to set up the weights
   if (this->blobs_.size() > 0 || bottom.size() == 3 
       || (bottom.size() == 2 && !bias_term_)) {
@@ -83,7 +81,7 @@ void InnerProductLayer<Dtype>::Reshape(const vector<Blob<Dtype>*>& bottom,
       << "Input size incompatible with inner product parameters.";
   // The first "axis" dimensions are independent inner products; the total
   // number of these is M_, the product over these dimensions.
-  M_ = bottom[0]->count(0, axis);  //batch_size
+  M_ = bottom[0]->count(0, axis);
   if (bottom.size() >= 2) N_ = bottom[1]->num();
   // The top shape will be the bottom shape with the flattened axes dropped,
   // and replaced by a single axis with dimension num_output (N_).
@@ -200,4 +198,3 @@ INSTANTIATE_CLASS(InnerProductLayer);
 REGISTER_LAYER_CLASS(InnerProduct);
 
 }  // namespace caffe
-

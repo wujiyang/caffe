@@ -26,7 +26,7 @@ class InnerProductLayer : public Layer<Dtype> {
       const vector<Blob<Dtype>*>& top);
 
   virtual inline const char* type() const { return "InnerProduct"; }
-  virtual inline int ExactNumBottomBlobs() const { return 1; }
+  virtual inline int MinBottomBlobs() const { return 1; }
   virtual inline int ExactNumTopBlobs() const { return 1; }
 
  protected:
@@ -39,13 +39,12 @@ class InnerProductLayer : public Layer<Dtype> {
   virtual void Backward_gpu(const vector<Blob<Dtype>*>& top,
       const vector<bool>& propagate_down, const vector<Blob<Dtype>*>& bottom);
 
-  int M_; //输入数据的数量，即batch_size
-  int K_; //单个输入数据的元素个数（c*h*w）
-  int N_; //输出神经元个数
+  int M_;
+  int K_;
+  int N_;
   bool bias_term_;
   Blob<Dtype> bias_multiplier_;
   bool transpose_;  ///< if true, assume transposed weights
-  //增加两个参数，进行权重归一化
   bool normalize_;
   Blob<Dtype> weight_norm_;
 };
